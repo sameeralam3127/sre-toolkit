@@ -6,9 +6,11 @@ function toYaml() {
       return;
     }
     const parsed = JSON.parse(input);
-    setOutput("jsonOutput", jsyaml.dump(parsed));
+    const yaml = jsyaml.dump(parsed);
+    setOutput("jsonOutput", yaml);
+    showNotification("✓ Converted to YAML", "success");
   } catch (e) {
-    setOutput("jsonOutput", "Invalid JSON: " + e.message);
+    setOutput("jsonOutput", "❌ Invalid JSON: " + e.message);
   }
 }
 
@@ -20,8 +22,16 @@ function toJson() {
       return;
     }
     const parsed = jsyaml.load(input);
-    setOutput("jsonOutput", JSON.stringify(parsed, null, 2));
+    const json = JSON.stringify(parsed, null, 2);
+    setOutput("jsonOutput", json);
+    showNotification("✓ Converted to JSON", "success");
   } catch (e) {
-    setOutput("jsonOutput", "Invalid YAML: " + e.message);
+    setOutput("jsonOutput", "❌ Invalid YAML: " + e.message);
   }
+}
+
+// Clear JSON/YAML input
+function clearJsonInput() {
+  document.getElementById("jsonInput").value = "";
+  setOutput("jsonOutput", "");
 }
