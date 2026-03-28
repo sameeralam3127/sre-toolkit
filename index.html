@@ -16,46 +16,68 @@
     <div class="container">
       <header>
         <h1>🚀 SRE Toolkit</h1>
-        <button id="themeToggle">🌙</button>
+        <button id="themeToggle" aria-label="Toggle dark and light theme">
+          🌙
+        </button>
       </header>
 
       <main class="grid">
         <!-- JSON YAML -->
         <section class="card">
           <h2>JSON ⇄ YAML</h2>
-          <textarea id="jsonInput"></textarea>
+          <textarea id="jsonInput" aria-label="JSON or YAML input"></textarea>
           <div class="btns">
-            <button onclick="toYaml()">To YAML</button>
-            <button onclick="toJson()">To JSON</button>
+            <button onclick="toYaml()" aria-label="Convert to YAML">
+              To YAML
+            </button>
+            <button onclick="toJson()" aria-label="Convert to JSON">
+              To JSON
+            </button>
           </div>
-          <pre id="jsonOutput"></pre>
+          <pre id="jsonOutput" aria-live="polite"></pre>
         </section>
 
         <!-- CRON -->
         <section class="card">
           <h2>Cron Helper</h2>
-          <input id="cronInput" placeholder="*/5 * * * *" />
-          <button onclick="parseCron()">Explain</button>
-          <pre id="cronOutput"></pre>
+          <input
+            id="cronInput"
+            placeholder="*/5 * * * *"
+            aria-label="Cron expression input"
+          />
+          <button onclick="parseCron()" aria-label="Explain cron expression">
+            Explain
+          </button>
+          <pre id="cronOutput" aria-live="polite"></pre>
         </section>
 
         <!-- BASE64 -->
         <section class="card">
           <h2>Base64</h2>
-          <textarea id="base64Input"></textarea>
+          <textarea id="base64Input" aria-label="Base64 input"></textarea>
           <div class="btns">
-            <button onclick="encodeBase64()">Encode</button>
-            <button onclick="decodeBase64()">Decode</button>
+            <button onclick="encodeBase64()" aria-label="Encode to Base64">
+              Encode
+            </button>
+            <button onclick="decodeBase64()" aria-label="Decode from Base64">
+              Decode
+            </button>
           </div>
-          <pre id="base64Output"></pre>
+          <pre id="base64Output" aria-live="polite"></pre>
         </section>
 
         <!-- CIDR -->
         <section class="card">
           <h2>CIDR Calculator</h2>
-          <input id="cidrInput" placeholder="192.168.1.0/24" />
-          <button onclick="calcCIDR()">Calculate</button>
-          <pre id="cidrOutput"></pre>
+          <input
+            id="cidrInput"
+            placeholder="192.168.1.0/24"
+            aria-label="CIDR block input"
+          />
+          <button onclick="calcCIDR()" aria-label="Calculate CIDR range">
+            Calculate
+          </button>
+          <pre id="cidrOutput" aria-live="polite"></pre>
         </section>
       </main>
     </div>
