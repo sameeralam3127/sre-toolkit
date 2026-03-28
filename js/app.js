@@ -4,11 +4,22 @@ function initTheme() {
   const themeToggle = document.getElementById("themeToggle");
 
   if (savedTheme === "light") {
+    document.body.classList.remove("dark");
     document.body.classList.add("light");
-    if (themeToggle) themeToggle.textContent = "☀️";
+    if (themeToggle) {
+      const icon = themeToggle.querySelector("i");
+      icon.setAttribute("data-feather", "sun");
+    }
   } else {
+    document.body.classList.add("dark");
     document.body.classList.remove("light");
-    if (themeToggle) themeToggle.textContent = "🌙";
+    if (themeToggle) {
+      const icon = themeToggle.querySelector("i");
+      icon.setAttribute("data-feather", "moon");
+    }
+  }
+  if (typeof feather !== "undefined") {
+    feather.replace();
   }
 }
 
@@ -18,26 +29,29 @@ function setupThemeToggle() {
   if (!themeToggle) return;
 
   themeToggle.addEventListener("click", () => {
-    const body = document.body;
-    const isLight = body.classList.toggle("light");
+    const isDark = document.body.classList.contains("dark");
 
-    if (isLight) {
+    if (isDark) {
+      document.body.classList.remove("dark");
+      document.body.classList.add("light");
       localStorage.setItem("theme", "light");
-      themeToggle.textContent = "☀️";
+      const icon = themeToggle.querySelector("i");
+      icon.setAttribute("data-feather", "sun");
     } else {
+      document.body.classList.remove("light");
+      document.body.classList.add("dark");
       localStorage.setItem("theme", "dark");
-      themeToggle.textContent = "🌙";
+      const icon = themeToggle.querySelector("i");
+      icon.setAttribute("data-feather", "moon");
+    }
+
+    if (typeof feather !== "undefined") {
+      feather.replace();
     }
   });
 }
 
-// Initialize on load
-document.addEventListener("DOMContentLoaded", () => {
-  initTheme();
-  setupThemeToggle();
-});
-
-// Fallback if DOMContentLoaded already fired
+// Initialize on window load to ensure DOM is ready
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", () => {
     initTheme();
