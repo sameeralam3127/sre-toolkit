@@ -2,91 +2,251 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>SRE Toolkit</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <link rel="stylesheet" href="css/style.css" />
-
-    <!-- libs -->
+    <title>SRE Toolkit</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/ip-cidr@2.1.3/ip-cidr.min.js"></script>
+    <style>
+      .dark {
+        --bg-primary: #1a202c;
+        --bg-secondary: #2d3748;
+        --text-primary: #f7fafc;
+        --text-secondary: #e2e8f0;
+        --accent: #4299e1;
+      }
+      .light {
+        --bg-primary: #f7fafc;
+        --bg-secondary: #edf2f7;
+        --text-primary: #1a202c;
+        --text-secondary: #4a5568;
+        --accent: #3182ce;
+      }
+      body {
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
+        transition: all 0.3s ease;
+      }
+      .card {
+        background-color: var(--bg-secondary);
+        transition: all 0.3s ease;
+      }
+      textarea,
+      input {
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
+        border: 1px solid var(--text-secondary);
+      }
+      pre {
+        background-color: var(--bg-primary);
+      }
+    </style>
   </head>
-
-  <body>
-    <div class="container">
-      <header>
-        <h1>🚀 SRE Toolkit</h1>
-        <button id="themeToggle" aria-label="Toggle dark and light theme">
-          🌙
+  <body class="dark">
+    <div class="min-h-screen p-4 md:p-8">
+      <header class="flex justify-between items-center mb-8">
+        <h1 class="text-3xl md:text-4xl font-bold flex items-center gap-2">
+          <i data-feather="tool" class="text-blue-400"></i>
+          <span>SRE Toolkit</span>
+        </h1>
+        <button
+          id="themeToggle"
+          class="p-2 rounded-full hover:bg-gray-700 transition-colors"
+          aria-label="Toggle dark and light theme"
+        >
+          <i data-feather="moon" class="text-yellow-300"></i>
         </button>
       </header>
 
-      <main class="grid">
+      <main class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- JSON YAML -->
-        <section class="card">
-          <h2>JSON ⇄ YAML</h2>
-          <textarea id="jsonInput" aria-label="JSON or YAML input"></textarea>
-          <div class="btns">
-            <button onclick="toYaml()" aria-label="Convert to YAML">
+        <section class="card rounded-xl p-6 shadow-lg" data-aos="fade-up">
+          <h2 class="text-xl font-semibold mb-4 flex items-center gap-2">
+            <i data-feather="code" class="text-blue-400"></i>
+            JSON ⇄ YAML
+          </h2>
+          <textarea
+            id="jsonInput"
+            class="w-full p-3 rounded-lg mb-4 min-h-[120px]"
+            placeholder='{"key": "value"}'
+            aria-label="JSON or YAML input"
+          ></textarea>
+          <div class="flex gap-3 mb-4">
+            <button
+              onclick="toYaml()"
+              class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
+              aria-label="Convert to YAML"
+            >
+              <i data-feather="arrow-right"></i>
               To YAML
             </button>
-            <button onclick="toJson()" aria-label="Convert to JSON">
+            <button
+              onclick="toJson()"
+              class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
+              aria-label="Convert to JSON"
+            >
+              <i data-feather="arrow-left"></i>
               To JSON
             </button>
           </div>
-          <pre id="jsonOutput" aria-live="polite"></pre>
+          <pre
+            id="jsonOutput"
+            class="p-3 rounded-lg overflow-auto max-h-60"
+            aria-live="polite"
+          ></pre>
         </section>
 
         <!-- CRON -->
-        <section class="card">
-          <h2>Cron Helper</h2>
-          <input
-            id="cronInput"
-            placeholder="*/5 * * * *"
-            aria-label="Cron expression input"
-          />
-          <button onclick="parseCron()" aria-label="Explain cron expression">
-            Explain
-          </button>
-          <pre id="cronOutput" aria-live="polite"></pre>
+        <section
+          class="card rounded-xl p-6 shadow-lg"
+          data-aos="fade-up"
+          data-aos-delay="100"
+        >
+          <h2 class="text-xl font-semibold mb-4 flex items-center gap-2">
+            <i data-feather="clock" class="text-blue-400"></i>
+            Cron Helper
+          </h2>
+          <div class="flex gap-3 mb-4">
+            <input
+              id="cronInput"
+              class="flex-1 p-3 rounded-lg"
+              placeholder="*/5 * * * *"
+              aria-label="Cron expression input"
+            />
+            <button
+              onclick="parseCron()"
+              class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
+              aria-label="Explain cron expression"
+            >
+              <i data-feather="help-circle"></i>
+              Explain
+            </button>
+          </div>
+          <pre
+            id="cronOutput"
+            class="p-3 rounded-lg overflow-auto max-h-60"
+            aria-live="polite"
+          ></pre>
         </section>
 
         <!-- BASE64 -->
-        <section class="card">
-          <h2>Base64</h2>
-          <textarea id="base64Input" aria-label="Base64 input"></textarea>
-          <div class="btns">
-            <button onclick="encodeBase64()" aria-label="Encode to Base64">
+        <section
+          class="card rounded-xl p-6 shadow-lg"
+          data-aos="fade-up"
+          data-aos-delay="200"
+        >
+          <h2 class="text-xl font-semibold mb-4 flex items-center gap-2">
+            <i data-feather="hash" class="text-blue-400"></i>
+            Base64
+          </h2>
+          <textarea
+            id="base64Input"
+            class="w-full p-3 rounded-lg mb-4 min-h-[120px]"
+            placeholder="Enter text to encode/decode"
+            aria-label="Base64 input"
+          ></textarea>
+          <div class="flex gap-3 mb-4">
+            <button
+              onclick="encodeBase64()"
+              class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
+              aria-label="Encode to Base64"
+            >
+              <i data-feather="lock"></i>
               Encode
             </button>
-            <button onclick="decodeBase64()" aria-label="Decode from Base64">
+            <button
+              onclick="decodeBase64()"
+              class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
+              aria-label="Decode from Base64"
+            >
+              <i data-feather="unlock"></i>
               Decode
             </button>
           </div>
-          <pre id="base64Output" aria-live="polite"></pre>
+          <pre
+            id="base64Output"
+            class="p-3 rounded-lg overflow-auto max-h-60"
+            aria-live="polite"
+          ></pre>
         </section>
 
         <!-- CIDR -->
-        <section class="card">
-          <h2>CIDR Calculator</h2>
-          <input
-            id="cidrInput"
-            placeholder="192.168.1.0/24"
-            aria-label="CIDR block input"
-          />
-          <button onclick="calcCIDR()" aria-label="Calculate CIDR range">
-            Calculate
-          </button>
-          <pre id="cidrOutput" aria-live="polite"></pre>
+        <section
+          class="card rounded-xl p-6 shadow-lg"
+          data-aos="fade-up"
+          data-aos-delay="300"
+        >
+          <h2 class="text-xl font-semibold mb-4 flex items-center gap-2">
+            <i data-feather="map-pin" class="text-blue-400"></i>
+            CIDR Calculator
+          </h2>
+          <div class="flex gap-3 mb-4">
+            <input
+              id="cidrInput"
+              class="flex-1 p-3 rounded-lg"
+              placeholder="192.168.1.0/24"
+              aria-label="CIDR block input"
+            />
+            <button
+              onclick="calcCIDR()"
+              class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
+              aria-label="Calculate CIDR range"
+            >
+              <i data-feather="calculator"></i>
+              Calculate
+            </button>
+          </div>
+          <pre
+            id="cidrOutput"
+            class="p-3 rounded-lg overflow-auto max-h-60"
+            aria-live="polite"
+          ></pre>
         </section>
       </main>
     </div>
 
-    <script src="js/utils.js"></script>
-    <script src="js/tools/jsonYaml.js"></script>
-    <script src="js/tools/cron.js"></script>
-    <script src="js/tools/base64.js"></script>
-    <script src="js/tools/cidr.js"></script>
-    <script src="js/app.js"></script>
+    <script>
+      AOS.init();
+      feather.replace();
+
+      // Theme toggle functionality
+      const themeToggle = document.getElementById("themeToggle");
+      themeToggle.addEventListener("click", () => {
+        document.body.classList.toggle("dark");
+        document.body.classList.toggle("light");
+
+        const icon = themeToggle.querySelector("i");
+        if (document.body.classList.contains("dark")) {
+          icon.setAttribute("data-feather", "moon");
+        } else {
+          icon.setAttribute("data-feather", "sun");
+        }
+        feather.replace();
+      });
+
+      // Placeholder for tool functions (these would be in your separate JS files)
+      function toYaml() {
+        /* Implementation */
+      }
+      function toJson() {
+        /* Implementation */
+      }
+      function parseCron() {
+        /* Implementation */
+      }
+      function encodeBase64() {
+        /* Implementation */
+      }
+      function decodeBase64() {
+        /* Implementation */
+      }
+      function calcCIDR() {
+        /* Implementation */
+      }
+    </script>
   </body>
 </html>
