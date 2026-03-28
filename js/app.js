@@ -9,6 +9,8 @@ function initTheme() {
     if (themeToggle) {
       const icon = themeToggle.querySelector("i");
       icon.setAttribute("data-feather", "sun");
+      icon.classList.remove("text-yellow-300");
+      icon.classList.add("text-yellow-500");
     }
   } else {
     document.body.classList.add("dark");
@@ -16,11 +18,16 @@ function initTheme() {
     if (themeToggle) {
       const icon = themeToggle.querySelector("i");
       icon.setAttribute("data-feather", "moon");
+      icon.classList.add("text-yellow-300");
     }
   }
-  if (typeof feather !== "undefined") {
-    feather.replace();
-  }
+
+  // Delay feather.replace to ensure DOM is ready
+  setTimeout(() => {
+    if (typeof feather !== "undefined") {
+      feather.replace();
+    }
+  }, 50);
 }
 
 // Setup theme toggle on DOM ready
@@ -28,26 +35,35 @@ function setupThemeToggle() {
   const themeToggle = document.getElementById("themeToggle");
   if (!themeToggle) return;
 
-  themeToggle.addEventListener("click", () => {
+  themeToggle.addEventListener("click", (e) => {
+    e.preventDefault();
     const isDark = document.body.classList.contains("dark");
+    const icon = themeToggle.querySelector("i");
 
     if (isDark) {
+      // Switch to light mode
       document.body.classList.remove("dark");
       document.body.classList.add("light");
       localStorage.setItem("theme", "light");
-      const icon = themeToggle.querySelector("i");
       icon.setAttribute("data-feather", "sun");
+      icon.classList.remove("text-yellow-300");
+      icon.classList.add("text-yellow-500");
     } else {
-      document.body.classList.remove("light");
+      // Switch to dark mode
       document.body.classList.add("dark");
+      document.body.classList.remove("light");
       localStorage.setItem("theme", "dark");
-      const icon = themeToggle.querySelector("i");
       icon.setAttribute("data-feather", "moon");
+      icon.classList.remove("text-yellow-500");
+      icon.classList.add("text-yellow-300");
     }
 
-    if (typeof feather !== "undefined") {
-      feather.replace();
-    }
+    // Delay feather.replace to ensure DOM updates
+    setTimeout(() => {
+      if (typeof feather !== "undefined") {
+        feather.replace();
+      }
+    }, 10);
   });
 }
 

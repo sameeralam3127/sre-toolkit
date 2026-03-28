@@ -43,6 +43,16 @@
       }
       pre {
         background-color: var(--bg-primary);
+        color: var(--text-primary);
+      }
+      #themeToggle {
+        background-color: var(--bg-secondary);
+        color: var(--text-primary);
+        border: 2px solid var(--text-secondary);
+        cursor: pointer;
+      }
+      #themeToggle:hover {
+        opacity: 0.8;
       }
     </style>
   </head>
@@ -56,7 +66,6 @@
         <button
           id="themeToggle"
           class="p-2 rounded-full transition-all hover:scale-110"
-          style="background-color: var(--bg-secondary)"
           aria-label="Toggle dark and light theme"
         >
           <i data-feather="moon" class="text-yellow-300"></i>
