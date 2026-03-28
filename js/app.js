@@ -5,27 +5,45 @@ function initTheme() {
 
   if (savedTheme === "light") {
     document.body.classList.add("light");
-    themeToggle.textContent = "☀️";
+    if (themeToggle) themeToggle.textContent = "☀️";
   } else {
     document.body.classList.remove("light");
-    themeToggle.textContent = "🌙";
+    if (themeToggle) themeToggle.textContent = "🌙";
   }
 }
 
-// Toggle theme
-document.getElementById("themeToggle").onclick = () => {
-  const body = document.body;
+// Setup theme toggle on DOM ready
+function setupThemeToggle() {
   const themeToggle = document.getElementById("themeToggle");
-  const isLight = body.classList.toggle("light");
+  if (!themeToggle) return;
 
-  if (isLight) {
-    localStorage.setItem("theme", "light");
-    themeToggle.textContent = "☀️";
-  } else {
-    localStorage.setItem("theme", "dark");
-    themeToggle.textContent = "🌙";
-  }
-};
+  themeToggle.addEventListener("click", () => {
+    const body = document.body;
+    const isLight = body.classList.toggle("light");
+
+    if (isLight) {
+      localStorage.setItem("theme", "light");
+      themeToggle.textContent = "☀️";
+    } else {
+      localStorage.setItem("theme", "dark");
+      themeToggle.textContent = "🌙";
+    }
+  });
+}
 
 // Initialize on load
-document.addEventListener("DOMContentLoaded", initTheme);
+document.addEventListener("DOMContentLoaded", () => {
+  initTheme();
+  setupThemeToggle();
+});
+
+// Fallback if DOMContentLoaded already fired
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", () => {
+    initTheme();
+    setupThemeToggle();
+  });
+} else {
+  initTheme();
+  setupThemeToggle();
+}
