@@ -3,28 +3,36 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SRE Toolkit</title>
+    <title>SRE Toolkit - DevOps & SRE Utilities</title>
+    <meta
+      name="description"
+      content="Comprehensive browser-based toolkit for Site Reliability Engineers and DevOps professionals"
+    />
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
-    <script src="https://unpkg.com/feather-icons"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/ip-cidr@2.1.3/ip-cidr.min.js"></script>
     <style>
       .dark {
-        --bg-primary: #1a202c;
-        --bg-secondary: #2d3748;
-        --text-primary: #f7fafc;
-        --text-secondary: #e2e8f0;
-        --accent: #4299e1;
+        --bg-primary: #0f172a;
+        --bg-secondary: #1e293b;
+        --bg-tertiary: #334155;
+        --text-primary: #f1f5f9;
+        --text-secondary: #cbd5e1;
+        --accent: #3b82f6;
+        --accent-hover: #2563eb;
+        --border: #334155;
       }
       .light {
-        --bg-primary: #f7fafc;
-        --bg-secondary: #edf2f7;
-        --text-primary: #1a202c;
-        --text-secondary: #4a5568;
-        --accent: #3182ce;
+        --bg-primary: #f8fafc;
+        --bg-secondary: #ffffff;
+        --bg-tertiary: #e2e8f0;
+        --text-primary: #0f172a;
+        --text-secondary: #475569;
+        --accent: #2563eb;
+        --accent-hover: #1d4ed8;
+        --border: #e2e8f0;
       }
       body {
         background-color: var(--bg-primary);
@@ -33,267 +41,325 @@
       }
       .card {
         background-color: var(--bg-secondary);
+        border: 1px solid var(--border);
         transition: all 0.3s ease;
       }
+      .card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(59, 130, 246, 0.15);
+      }
       textarea,
-      input {
-        background-color: var(--bg-primary);
+      input,
+      select {
+        background-color: var(--bg-tertiary);
         color: var(--text-primary);
-        border: 1px solid var(--text-secondary);
+        border: 1px solid var(--border);
+      }
+      textarea:focus,
+      input:focus,
+      select:focus {
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
       }
       pre {
-        background-color: var(--bg-primary);
+        background-color: var(--bg-tertiary);
         color: var(--text-primary);
+        border: 1px solid var(--border);
       }
-      #themeToggle {
-        background-color: var(--bg-secondary);
-        color: var(--text-primary);
-        border: 2px solid var(--text-secondary);
-        cursor: pointer;
+      .tab-button {
+        transition: all 0.2s ease;
       }
-      #themeToggle:hover {
-        opacity: 0.8;
+      .tab-button.active {
+        background-color: var(--accent);
+        color: white;
+      }
+      .hidden {
+        display: none !important;
+      }
+      #toolsGrid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 1.5rem;
+        align-items: start;
+      }
+      #toolsGrid > * {
+        height: 100%;
+      }
+      .sidebar {
+        position: sticky;
+        top: 20px;
+        max-height: calc(100vh - 40px);
+        overflow-y: auto;
+      }
+      .sidebar::-webkit-scrollbar {
+        width: 6px;
+      }
+      .sidebar::-webkit-scrollbar-track {
+        background: var(--bg-secondary);
+      }
+      .sidebar::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 3px;
+      }
+      @media (max-width: 768px) {
+        .sidebar {
+          position: relative;
+          max-height: none;
+        }
       }
     </style>
   </head>
   <body class="dark">
-    <div class="min-h-screen p-4 md:p-8">
-      <header class="flex justify-between items-center mb-8">
-        <h1 class="text-3xl md:text-4xl font-bold flex items-center gap-2">
-          <i data-feather="tool" class="text-blue-400"></i>
-          <span>SRE Toolkit</span>
-        </h1>
-        <button
-          id="themeToggle"
-          class="p-2 rounded-full transition-all hover:scale-110"
-          aria-label="Toggle dark and light theme"
-        >
-          <i data-feather="moon" class="text-yellow-300"></i>
-        </button>
+    <div class="min-h-screen">
+      <!-- Header -->
+      <header
+        class="sticky top-0 z-50 bg-opacity-95 backdrop-blur-sm"
+        style="
+          background-color: var(--bg-secondary);
+          border-bottom: 1px solid var(--border);
+        "
+      >
+        <div class="container mx-auto px-4 py-4">
+          <div class="flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+              <i
+                data-feather="tool"
+                class="text-blue-400"
+                style="width: 32px; height: 32px"
+              ></i>
+              <div>
+                <h1 class="text-2xl font-bold">SRE Toolkit</h1>
+                <p class="text-xs text-secondary opacity-75">
+                  DevOps & SRE Utilities
+                </p>
+              </div>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="relative hidden md:block">
+                <input
+                  id="searchInput"
+                  type="text"
+                  placeholder="Search tools..."
+                  class="pl-10 pr-4 py-2 rounded-lg w-64"
+                  aria-label="Search tools"
+                />
+                <i
+                  data-feather="search"
+                  class="absolute left-3 top-1/2 transform -translate-y-1/2 opacity-50"
+                  style="width: 18px; height: 18px"
+                ></i>
+              </div>
+              <button
+                id="themeToggle"
+                class="p-2 rounded-lg hover:bg-opacity-80 transition-all"
+                style="background-color: var(--bg-tertiary)"
+                aria-label="Toggle theme"
+              >
+                <i data-feather="moon" style="width: 20px; height: 20px"></i>
+              </button>
+            </div>
+          </div>
+          <!-- Mobile Search -->
+          <div class="mt-3 md:hidden">
+            <div class="relative">
+              <input
+                id="searchInputMobile"
+                type="text"
+                placeholder="Search tools..."
+                class="pl-10 pr-4 py-2 rounded-lg w-full"
+                aria-label="Search tools"
+              />
+              <i
+                data-feather="search"
+                class="absolute left-3 top-1/2 transform -translate-y-1/2 opacity-50"
+                style="width: 18px; height: 18px"
+              ></i>
+            </div>
+          </div>
+        </div>
       </header>
 
-      <main class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- JSON YAML -->
-        <section class="card rounded-xl p-6 shadow-lg" data-aos="fade-up">
-          <h2 class="text-xl font-semibold mb-4 flex items-center gap-2">
-            <i data-feather="code" class="text-blue-400"></i>
-            JSON ⇄ YAML
-          </h2>
-          <textarea
-            id="jsonInput"
-            class="w-full p-3 rounded-lg mb-4 min-h-[120px]"
-            placeholder='{"key": "value"}'
-            aria-label="JSON or YAML input"
-          ></textarea>
-          <div class="flex gap-3 mb-4">
-            <button
-              onclick="toYaml()"
-              class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
-              aria-label="Convert to YAML"
-            >
-              <i data-feather="arrow-right"></i>
-              To YAML
-            </button>
-            <button
-              onclick="toJson()"
-              class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
-              aria-label="Convert to JSON"
-            >
-              <i data-feather="arrow-left"></i>
-              To JSON
-            </button>
-          </div>
-          <pre
-            id="jsonOutput"
-            class="p-3 rounded-lg overflow-auto max-h-60 mb-3"
-            aria-live="polite"
-          ></pre>
-          <div class="flex gap-2">
-            <button
-              onclick="copyToClipboard('jsonOutput')"
-              class="flex-1 bg-gray-600 hover:bg-gray-700 text-white px-3 py-2 rounded-lg transition-colors text-sm flex items-center justify-center gap-2"
-            >
-              <i data-feather="copy" style="width: 16px; height: 16px"></i>
-              Copy
-            </button>
-            <button
-              onclick="clearJsonInput()"
-              class="flex-1 bg-gray-600 hover:bg-gray-700 text-white px-3 py-2 rounded-lg transition-colors text-sm flex items-center justify-center gap-2"
-            >
-              <i data-feather="trash-2" style="width: 16px; height: 16px"></i>
-              Clear
-            </button>
-          </div>
-        </section>
+      <div class="container mx-auto px-4 py-6">
+        <div class="flex flex-col md:flex-row gap-6">
+          <!-- Sidebar -->
+          <aside class="w-full md:w-64 sidebar">
+            <div class="card rounded-xl p-4">
+              <h3 class="font-semibold mb-3 flex items-center gap-2">
+                <i data-feather="filter" style="width: 18px; height: 18px"></i>
+                Categories
+              </h3>
+              <div class="space-y-2">
+                <button
+                  onclick="filterTools('all')"
+                  class="tab-button active w-full text-left px-3 py-2 rounded-lg"
+                  data-category="all"
+                >
+                  <span class="flex items-center gap-2">
+                    <i
+                      data-feather="grid"
+                      style="width: 16px; height: 16px"
+                    ></i>
+                    All Tools
+                  </span>
+                </button>
+                <button
+                  onclick="filterTools('encoders')"
+                  class="tab-button w-full text-left px-3 py-2 rounded-lg hover:bg-opacity-10"
+                  data-category="encoders"
+                >
+                  <span class="flex items-center gap-2">
+                    <i
+                      data-feather="lock"
+                      style="width: 16px; height: 16px"
+                    ></i>
+                    Encoders & Decoders
+                  </span>
+                </button>
+                <button
+                  onclick="filterTools('network')"
+                  class="tab-button w-full text-left px-3 py-2 rounded-lg hover:bg-opacity-10"
+                  data-category="network"
+                >
+                  <span class="flex items-center gap-2">
+                    <i
+                      data-feather="globe"
+                      style="width: 16px; height: 16px"
+                    ></i>
+                    Network Tools
+                  </span>
+                </button>
+                <button
+                  onclick="filterTools('devops')"
+                  class="tab-button w-full text-left px-3 py-2 rounded-lg hover:bg-opacity-10"
+                  data-category="devops"
+                >
+                  <span class="flex items-center gap-2">
+                    <i
+                      data-feather="settings"
+                      style="width: 16px; height: 16px"
+                    ></i>
+                    DevOps Utilities
+                  </span>
+                </button>
+                <button
+                  onclick="filterTools('text')"
+                  class="tab-button w-full text-left px-3 py-2 rounded-lg hover:bg-opacity-10"
+                  data-category="text"
+                >
+                  <span class="flex items-center gap-2">
+                    <i
+                      data-feather="type"
+                      style="width: 16px; height: 16px"
+                    ></i>
+                    Text Tools
+                  </span>
+                </button>
+                <button
+                  onclick="filterTools('security')"
+                  class="tab-button w-full text-left px-3 py-2 rounded-lg hover:bg-opacity-10"
+                  data-category="security"
+                >
+                  <span class="flex items-center gap-2">
+                    <i
+                      data-feather="shield"
+                      style="width: 16px; height: 16px"
+                    ></i>
+                    Security Tools
+                  </span>
+                </button>
+              </div>
 
-        <!-- CRON -->
-        <section
-          class="card rounded-xl p-6 shadow-lg"
-          data-aos="fade-up"
-          data-aos-delay="100"
-        >
-          <h2 class="text-xl font-semibold mb-4 flex items-center gap-2">
-            <i data-feather="clock" class="text-blue-400"></i>
-            Cron Helper
-          </h2>
-          <div class="flex gap-3 mb-4">
-            <input
-              id="cronInput"
-              class="flex-1 p-3 rounded-lg"
-              placeholder="*/5 * * * *"
-              aria-label="Cron expression input"
-            />
-            <button
-              onclick="parseCron()"
-              class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
-              aria-label="Explain cron expression"
-            >
-              <i data-feather="help-circle"></i>
-              Explain
-            </button>
-          </div>
-          <pre
-            id="cronOutput"
-            class="p-3 rounded-lg overflow-auto max-h-60 mb-3"
-            aria-live="polite"
-          ></pre>
-          <div class="flex gap-2">
-            <button
-              onclick="copyToClipboard('cronOutput')"
-              class="flex-1 bg-gray-600 hover:bg-gray-700 text-white px-3 py-2 rounded-lg transition-colors text-sm flex items-center justify-center gap-2"
-            >
-              <i data-feather="copy" style="width: 16px; height: 16px"></i>
-              Copy
-            </button>
-            <button
-              onclick="clearCronInput()"
-              class="flex-1 bg-gray-600 hover:bg-gray-700 text-white px-3 py-2 rounded-lg transition-colors text-sm flex items-center justify-center gap-2"
-            >
-              <i data-feather="trash-2" style="width: 16px; height: 16px"></i>
-              Clear
-            </button>
-          </div>
-        </section>
+              <!-- Keyboard Shortcuts -->
+              <div
+                class="mt-6 pt-4 border-t"
+                style="border-color: var(--border)"
+              >
+                <h4 class="text-sm font-semibold mb-2 flex items-center gap-2">
+                  <i
+                    data-feather="command"
+                    style="width: 14px; height: 14px"
+                  ></i>
+                  Shortcuts
+                </h4>
+                <div class="text-xs space-y-1 opacity-75">
+                  <div>Ctrl/Cmd + Enter: Execute</div>
+                  <div>Ctrl/Cmd + K: Search</div>
+                  <div>Esc: Clear search</div>
+                </div>
+              </div>
+            </div>
+          </aside>
 
-        <!-- BASE64 -->
-        <section
-          class="card rounded-xl p-6 shadow-lg"
-          data-aos="fade-up"
-          data-aos-delay="200"
-        >
-          <h2 class="text-xl font-semibold mb-4 flex items-center gap-2">
-            <i data-feather="hash" class="text-blue-400"></i>
-            Base64
-          </h2>
-          <textarea
-            id="base64Input"
-            class="w-full p-3 rounded-lg mb-4 min-h-[120px]"
-            placeholder="Enter text to encode/decode"
-            aria-label="Base64 input"
-          ></textarea>
-          <div class="flex gap-3 mb-4">
-            <button
-              onclick="encodeBase64()"
-              class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
-              aria-label="Encode to Base64"
-            >
-              <i data-feather="lock"></i>
-              Encode
-            </button>
-            <button
-              onclick="decodeBase64()"
-              class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
-              aria-label="Decode from Base64"
-            >
-              <i data-feather="unlock"></i>
-              Decode
-            </button>
-          </div>
-          <pre
-            id="base64Output"
-            class="p-3 rounded-lg overflow-auto max-h-60 mb-3"
-            aria-live="polite"
-          ></pre>
-          <div class="flex gap-2">
-            <button
-              onclick="copyToClipboard('base64Output')"
-              class="flex-1 bg-gray-600 hover:bg-gray-700 text-white px-3 py-2 rounded-lg transition-colors text-sm flex items-center justify-center gap-2"
-            >
-              <i data-feather="copy" style="width: 16px; height: 16px"></i>
-              Copy
-            </button>
-            <button
-              onclick="clearBase64Input()"
-              class="flex-1 bg-gray-600 hover:bg-gray-700 text-white px-3 py-2 rounded-lg transition-colors text-sm flex items-center justify-center gap-2"
-            >
-              <i data-feather="trash-2" style="width: 16px; height: 16px"></i>
-              Clear
-            </button>
-          </div>
-        </section>
-
-        <!-- CIDR -->
-        <section
-          class="card rounded-xl p-6 shadow-lg"
-          data-aos="fade-up"
-          data-aos-delay="300"
-        >
-          <h2 class="text-xl font-semibold mb-4 flex items-center gap-2">
-            <i data-feather="map-pin" class="text-blue-400"></i>
-            CIDR Calculator
-          </h2>
-          <div class="flex gap-3 mb-4">
-            <input
-              id="cidrInput"
-              class="flex-1 p-3 rounded-lg"
-              placeholder="192.168.1.0/24"
-              aria-label="CIDR block input"
-            />
-            <button
-              onclick="calcCIDR()"
-              class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
-              aria-label="Calculate CIDR range"
-            >
-              <i data-feather="calculator"></i>
-              Calculate
-            </button>
-          </div>
-          <pre
-            id="cidrOutput"
-            class="p-3 rounded-lg overflow-auto max-h-60 mb-3"
-            aria-live="polite"
-          ></pre>
-          <div class="flex gap-2">
-            <button
-              onclick="copyToClipboard('cidrOutput')"
-              class="flex-1 bg-gray-600 hover:bg-gray-700 text-white px-3 py-2 rounded-lg transition-colors text-sm flex items-center justify-center gap-2"
-            >
-              <i data-feather="copy" style="width: 16px; height: 16px"></i>
-              Copy
-            </button>
-            <button
-              onclick="clearCidrInput()"
-              class="flex-1 bg-gray-600 hover:bg-gray-700 text-white px-3 py-2 rounded-lg transition-colors text-sm flex items-center justify-center gap-2"
-            >
-              <i data-feather="trash-2" style="width: 16px; height: 16px"></i>
-              Clear
-            </button>
-          </div>
-        </section>
-      </main>
+          <!-- Main Content -->
+          <main class="flex-1">
+            <div id="toolsGrid">
+              <!-- Tools will be dynamically loaded here -->
+            </div>
+            <div id="noResults" class="hidden text-center py-12">
+              <i
+                data-feather="search"
+                class="mx-auto mb-4 opacity-50"
+                style="width: 48px; height: 48px"
+              ></i>
+              <p class="text-lg opacity-75">No tools found</p>
+            </div>
+          </main>
+        </div>
+      </div>
     </div>
 
+    <!-- Tool Templates -->
+    <template id="toolTemplate">
+      <section
+        class="card rounded-xl p-6 shadow-lg tool-card"
+        data-aos="fade-up"
+      >
+        <div class="flex items-start justify-between mb-4">
+          <div>
+            <h2
+              class="text-xl font-semibold flex items-center gap-2 tool-title"
+            >
+              <i class="tool-icon"></i>
+              <span class="tool-name"></span>
+            </h2>
+            <p class="text-sm opacity-75 mt-1 tool-description"></p>
+          </div>
+        </div>
+        <div class="tool-content"></div>
+      </section>
+    </template>
+
     <script>
-      AOS.init();
+      AOS.init({ duration: 400, once: true });
       feather.replace();
     </script>
 
-    <!-- External Tool Scripts -->
+    <!-- Tool Scripts -->
     <script src="js/utils.js"></script>
     <script src="js/tools/jsonYaml.js"></script>
     <script src="js/tools/cron.js"></script>
     <script src="js/tools/base64.js"></script>
     <script src="js/tools/cidr.js"></script>
+    <script src="js/tools/jwt.js"></script>
+    <script src="js/tools/url.js"></script>
+    <script src="js/tools/hash.js"></script>
+    <script src="js/tools/uuid.js"></script>
+    <script src="js/tools/timestamp.js"></script>
+    <script src="js/tools/password.js"></script>
+    <script src="js/tools/regex.js"></script>
+    <script src="js/tools/textCase.js"></script>
+    <script src="js/tools/diff.js"></script>
+    <script src="js/tools/httpStatus.js"></script>
+    <script src="js/tools/colorConverter.js"></script>
+    <script src="js/tools/textStats.js"></script>
+    <script src="js/tools/lineSorter.js"></script>
+    <script src="js/tools/htmlEntity.js"></script>
+    <script src="js/tools/csvJson.js"></script>
+    <script src="js/tools/sqlFormatter.js"></script>
+    <script src="js/tools/xmlFormatter.js"></script>
+    <script src="js/tools/markdown.js"></script>
+    <script src="js/toolRegistry.js"></script>
     <script src="js/app.js"></script>
   </body>
 </html>

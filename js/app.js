@@ -1,33 +1,42 @@
 // Initialize theme on page load
 function initTheme() {
   const savedTheme = localStorage.getItem("theme") || "dark";
-  const themeToggle = document.getElementById("themeToggle");
 
   if (savedTheme === "light") {
     document.body.classList.remove("dark");
     document.body.classList.add("light");
-    if (themeToggle) {
-      const icon = themeToggle.querySelector("i");
-      icon.setAttribute("data-feather", "sun");
-      icon.classList.remove("text-yellow-300");
-      icon.classList.add("text-yellow-500");
-    }
   } else {
     document.body.classList.add("dark");
     document.body.classList.remove("light");
-    if (themeToggle) {
-      const icon = themeToggle.querySelector("i");
-      icon.setAttribute("data-feather", "moon");
-      icon.classList.add("text-yellow-300");
-    }
   }
 
-  // Delay feather.replace to ensure DOM is ready
-  setTimeout(() => {
-    if (typeof feather !== "undefined") {
-      feather.replace();
-    }
-  }, 50);
+  // Update theme toggle icon if it exists
+  updateThemeIcon();
+}
+
+function updateThemeIcon() {
+  const themeToggle = document.getElementById("themeToggle");
+  if (!themeToggle) return;
+
+  const icon = themeToggle.querySelector("i");
+  if (!icon) return;
+
+  const isDark = document.body.classList.contains("dark");
+
+  if (isDark) {
+    icon.setAttribute("data-feather", "moon");
+    icon.classList.remove("text-yellow-500");
+    icon.classList.add("text-yellow-300");
+  } else {
+    icon.setAttribute("data-feather", "sun");
+    icon.classList.remove("text-yellow-300");
+    icon.classList.add("text-yellow-500");
+  }
+
+  // Replace feather icons
+  if (typeof feather !== "undefined") {
+    feather.replace();
+  }
 }
 
 // Setup theme toggle on DOM ready
@@ -38,32 +47,21 @@ function setupThemeToggle() {
   themeToggle.addEventListener("click", (e) => {
     e.preventDefault();
     const isDark = document.body.classList.contains("dark");
-    const icon = themeToggle.querySelector("i");
 
     if (isDark) {
       // Switch to light mode
       document.body.classList.remove("dark");
       document.body.classList.add("light");
       localStorage.setItem("theme", "light");
-      icon.setAttribute("data-feather", "sun");
-      icon.classList.remove("text-yellow-300");
-      icon.classList.add("text-yellow-500");
     } else {
       // Switch to dark mode
       document.body.classList.add("dark");
       document.body.classList.remove("light");
       localStorage.setItem("theme", "dark");
-      icon.setAttribute("data-feather", "moon");
-      icon.classList.remove("text-yellow-500");
-      icon.classList.add("text-yellow-300");
     }
 
-    // Delay feather.replace to ensure DOM updates
-    setTimeout(() => {
-      if (typeof feather !== "undefined") {
-        feather.replace();
-      }
-    }, 10);
+    // Update icon
+    updateThemeIcon();
   });
 }
 
